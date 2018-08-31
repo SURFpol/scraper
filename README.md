@@ -5,9 +5,14 @@ This repository contains code for scraping a SURFsharekit repository.
 [Install conda](https://conda.io/docs/user-guide/install/index.html) 
 first, and install the dependencies in a Python 3.6 environment:
 
-**Conda**:
 ```
-> conda install --file requirements.txt
+> conda env create python=3.6 -n scraper -f environment.yml
+```
+
+Activate the environment:
+
+```
+> conda activate scraper
 ```
 
 An [analyzer](https://github.com/SURFpol/analyzer) REST endpoint is required 
