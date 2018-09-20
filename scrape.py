@@ -1,16 +1,24 @@
+import json
+
 import requests
 
 
 ALLOWED_CONTENT_TYPES = frozenset([
     'application/pdf',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/vnd.ms-powerpoint'
 ])
 
 
 class IsYoutubeLink(Exception):
     def __init__(self, url):
         super().__init__('not scraping youtube link: \'{}\''.format(url))
+
+
+class IsPreziLink(Exception):
+    def __init__(self, url):
+        super().__init__('not scraping prezi link: \'{}\''.format(url))
 
 
 class ContentTypeNotAllowed(Exception):
@@ -79,6 +87,18 @@ def get_download_url(url):
     return url
 
 
+def dump_json(obj, path):
+    """
+    Dump an object to JSON, pretty-printed.
+    :param obj: object to dump.
+    :param path: path to dump to.
+    :return: path.
+    """
+    with open(path, 'wt') as stream:
+        json.dump(obj, stream, indent=4)
+    return path
+
+
 def _check_url(url):
     """
     Check that a URL is a valid target for text extraction. At the moment,
@@ -88,6 +108,9 @@ def _check_url(url):
     """
     if 'youtube.com' in url:
         raise IsYoutubeLink(url)
+
+    if 'prezi.com' in url:
+        raise IsPreziLink(url)
 
 
 def _check_content_type(content_type):
@@ -100,3 +123,4 @@ def _check_content_type(content_type):
         return
 
     raise ContentTypeNotAllowed(content_type)
+
